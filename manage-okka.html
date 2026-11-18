@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>okka Coffee - لوحة تحكم الإدارة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body {
+            background: linear-gradient(180deg, #FFF3E0 0%, #FAF0E6 100%);
+            color: #3E2723;
+        }
+        .brand-font { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- شاشة تسجيل الدخول المحمية بـ Username & Password مشفرين بالكامل -->
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center p-4 z-50"
+         style="background: linear-gradient(135deg, rgba(78, 52, 46, 0.94), rgba(135, 67, 29, 0.88), rgba(62, 39, 35, 0.96)), url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="bg-[#FFFDF9] rounded-3xl shadow-2xl max-w-md w-full p-8 border-2 border-[#F5CBA7] text-center">
+            <!-- شعار okka Coffee المطابق للموقع -->
+            <div class="w-20 h-20 bg-[#FFF3E0] rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-[#E67E22] shadow-lg overflow-hidden p-1">
+                <svg class="w-full h-full rounded-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="95" fill="#8B4513"/>
+                    <circle cx="100" cy="100" r="85" stroke="#FFFFFF" stroke-width="4"/>
+                    <circle cx="100" cy="100" r="75" fill="#6F3709"/>
+                    <circle cx="100" cy="108" r="42" fill="#542905"/>
+                    <path d="M 72 100 L 128 100 C 126 122, 114 132, 100 132 C 86 132, 74 122, 72 100 Z" fill="#FFFFFF"/>
+                    <path d="M 76 104 L 124 104 C 122 120, 112 128, 100 128 C 88 128, 78 120, 76 104 Z" fill="#8B4513"/>
+                    <path d="M 126 104 C 138 104, 138 122, 122 122" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+                    <path d="M 100 94 C 98 84, 104 80, 102 70" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none"/>
+                </svg>
+            </div>
+            <h1 class="brand-font text-3xl font-black text-[#3E2723]">okka</h1>
+            <p class="text-xs font-extrabold text-[#E67E22] tracking-widest uppercase mb-5">Admin Control Panel</p>
+            
+            <form id="login-form" autocomplete="off" class="space-y-4 text-right">
+                <div>
+                    <label class="block text-xs font-extrabold text-[#5D4037] mb-1.5">اسم المستخدم (Username)</label>
+                    <div class="relative">
+                        <input type="text" id="admin-user-input" required autocomplete="off" placeholder="أدخل اسم المستخدم"
+                            class="w-full px-4 py-3 pr-10 rounded-xl border-2 border-[#F5CBA7] bg-[#FAF0E6] focus:border-[#E67E22] focus:bg-white outline-none font-bold text-left" dir="ltr">
+                        <i class="fa-solid fa-user-shield absolute right-3.5 top-3.5 text-[#E67E22]"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-[#5D4037] mb-1.5">كلمة المرور (Password)</label>
+                    <div class="relative">
+                        <input type="password" id="admin-pass-input" required autocomplete="new-password" placeholder="••••••••"
+                            class="w-full px-4 py-3 pr-10 pl-10 rounded-xl border-2 border-[#F5CBA7] bg-[#FAF0E6] focus:border-[#E67E22] focus:bg-white outline-none font-bold text-left" dir="ltr">
+                        <i class="fa-solid fa-lock absolute right-3.5 top-3.5 text-[#E67E22]"></i>
+                        <button type="button" onclick="togglePassVisibility()" class="absolute left-3.5 top-3.5 text-[#8D6E63] hover:text-[#3E2723]">
+                            <i id="pass-eye" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-[#5D4037]">
+                        <input type="checkbox" id="remember-24h" checked class="w-4 h-4 accent-[#E67E22] rounded">
+                        <span>تذكر تسجيل الدخول على هذا الجهاز لمدة 24 ساعة</span>
+                    </label>
+                </div>
+                <button type="submit" id="login-submit-btn" class="w-full bg-gradient-to-l from-[#E67E22] to-[#F39C12] hover:from-[#D35400] hover:to-[#E67E22] text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> دخول آمن للإدارة
+                </button>
+            </form>
+            <p id="login-error" class="text-red-600 font-bold text-xs mt-3 bg-red-50 py-2 px-3 rounded-lg border border-red-200 hidden"></p>
+        </div>
+    </div>
+
+    <!-- واجهة لوحة التحكم الرئيسية بنفس هوية okka Coffee -->
+    <div id="dashboard-screen" class="hidden flex-1 flex flex-col">
+        <!-- الهيدر المطابق لهوية الموقع -->
+        <header class="bg-[#4E342E] text-[#FFF8E7] py-3.5 px-5 shadow-lg flex flex-wrap justify-between items-center gap-4 border-b-2 border-[#E67E22]">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-[#FFF3E0] p-1 border-2 border-[#E67E22] flex items-center justify-center overflow-hidden">
+                    <svg class="w-full h-full rounded-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="95" fill="#8B4513"/>
+                        <circle cx="100" cy="100" r="80" stroke="#FFFFFF" stroke-width="5"/>
+                        <path d="M 72 100 L 128 100 C 126 122, 114 132, 100 132 C 86 132, 74 122, 72 100 Z" fill="#FFFFFF"/>
+                        <path d="M 76 104 L 124 104 C 122 120, 112 128, 100 128 C 88 128, 78 120, 76 104 Z" fill="#8B4513"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="brand-font text-2xl font-black text-[#FFF3E0]">okka</h1>
+                        <span class="bg-[#E67E22] text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">لوحة الإدارة</span>
+                    </div>
+                    <span class="text-xs text-[#F5CBA7] font-semibold">متزامنة لحظياً مع موقع الزبائن</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <span id="connection-badge" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-green-900/50 text-green-300 border border-green-500/40 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> متصل وآمن
+                </span>
+                <button onclick="seedInitialData()" class="bg-[#3E2723] hover:bg-[#2B1B18] text-[#FFF3E0] text-xs font-bold px-3.5 py-2.5 rounded-xl border border-[#8D6E63] flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-cloud-arrow-down text-[#F39C12]"></i> استيراد الأصناف الافتراضية
+                </button>
+                <button onclick="logoutAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 shadow transition">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="max-w-6xl w-full mx-auto px-4 pt-6 flex-1">
+            <!-- بطاقات الإحصائيات السريعة -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-[#FFFDF9] p-4 rounded-2xl border-2 border-[#F5CBA7] shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-[#8D6E63]">التصنيفات</div>
+                        <div id="stat-cats" class="text-2xl font-black text-[#E67E22] mt-0.5">0</div>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-[#FFF3E0] text-[#E67E22] flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                </div>
+                <div class="bg-[#FFFDF9] p-4 rounded-2xl border-2 border-[#F5CBA7] shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-[#8D6E63]">أصناف المنيو</div>
+                        <div id="stat-menu" class="text-2xl font-black text-[#3E2723] mt-0.5">0</div>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-[#FFF3E0] text-[#E67E22] flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-mug-saucer"></i>
+                    </div>
+                </div>
+                <div class="bg-[#FFFDF9] p-4 rounded-2xl border-2 border-[#F5CBA7] shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-[#8D6E63]">اشتري القهوة</div>
+                        <div id="stat-shop" class="text-2xl font-black text-[#3E2723] mt-0.5">0</div>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-[#FFF3E0] text-[#E67E22] flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+                </div>
+                <div class="bg-[#FFFDF9] p-4 rounded-2xl border-2 border-[#F5CBA7] shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-[#8D6E63]">حالة الكافيه</div>
+                        <div id="stat-status" class="text-base font-black text-green-700 mt-1">تلقائي</div>
+                    </div>
+                    <div class="w-11 h-11 rounded-xl bg-[#FFF3E0] text-[#E67E22] flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- التبويبات الرئيسية للإدارة -->
+            <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-[#F5CBA7] pb-3">
+                <button onclick="switchAdminTab('products')" id="tab-btn-products" class="px-5 py-2.5 rounded-xl font-extrabold text-sm bg-[#E67E22] text-white shadow transition">
+                    <i class="fa-solid fa-mug-saucer ml-1"></i> إدارة الأصناف والصور
+                </button>
+                <button onclick="switchAdminTab('categories')" id="tab-btn-categories" class="px-5 py-2.5 rounded-xl font-extrabold text-sm bg-[#FFFDF9] text-[#3E2723] border border-[#F5CBA7] hover:bg-[#FFF3E0] transition">
+                    <i class="fa-solid fa-layer-group ml-1"></i> إدارة التصنيفات (Categories)
+                </button>
+                <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-5 py-2.5 rounded-xl font-extrabold text-sm bg-[#FFFDF9] text-[#3E2723] border border-[#F5CBA7] hover:bg-[#FFF3E0] transition">
+                    <i class="fa-solid fa-shield-halved ml-1"></i> حالة الكافيه والأمان
+                </button>
+            </div>
+
+            <!-- 1. قسم إدارة الأصناف والمنتجات -->
+            <div id="admin-tab-products" class="space-y-6 pb-12">
+                <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                    <h2 id="product-form-title" class="text-lg font-black text-[#E67E22] mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> إضافة صنف أو منتج جديد
+                    </h2>
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <input type="hidden" id="edit-product-id">
+                        
+                        <div>
+                            <label class="block text-xs font-bold mb-1">القسم بالموقع *</label>
+                            <select id="prod-section" onchange="updateCategoryDropdown()" required class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                                <option value="menu">المنيو (مشروبات ومخبوزات)</option>
+                                <option value="shop">اشتري القهوة (متجر الحبوب)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-1">التصنيف (Category) *</label>
+                            <select id="prod-category" required class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold"></select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-1">السعر (ج.م) *</label>
+                            <input type="number" id="prod-price" required min="1" max="100000" step="0.5" placeholder="مثال: 75" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم الصنف بالعربية *</label>
+                            <input type="text" id="prod-name-ar" required maxlength="80" placeholder="مثال: سبانش لاتيه مثلج" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم الصنف بالإنجليزية *</label>
+                            <input type="text" id="prod-name-en" required maxlength="80" placeholder="e.g. Iced Spanish Latte" dir="ltr" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-1">حالة التوفر</label>
+                            <select id="prod-available" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                                <option value="true">متوفر للطلب</option>
+                                <option value="false">غير متوفر حالياً (مخفي عن الزبائن)</option>
+                            </select>
+                        </div>
+
+                        <!-- إضافة صورة: رابط مباشر أو رفع صورة من الجهاز -->
+                        <div class="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#FAF0E6] p-4 rounded-xl border border-[#F5CBA7]">
+                            <div>
+                                <label class="block text-xs font-bold mb-1"><i class="fa-solid fa-link text-[#E67E22]"></i> رابط صورة المنتج (URL)</label>
+                                <input type="url" id="prod-img-url" oninput="previewImageFromUrl()" placeholder="https://..." dir="ltr" class="w-full p-2.5 rounded-xl border border-[#F5CBA7] bg-white font-semibold text-sm">
+                                
+                                <label class="block text-xs font-bold mt-3 mb-1"><i class="fa-solid fa-upload text-[#E67E22]"></i> أو ارفع صورة من جهازك (يتم ضغطها وحمايتها تلقائياً)</label>
+                                <input type="file" id="prod-img-file" accept="image/png, image/jpeg, image/webp" onchange="handleImageUpload(event)" class="w-full text-xs font-bold file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#E67E22] file:text-white hover:file:bg-[#D35400]">
+                            </div>
+                            <div class="flex flex-col items-center justify-center border-2 border-dashed border-[#F5CBA7] rounded-xl p-2 bg-white">
+                                <img id="prod-img-preview" src="https://placehold.co/300x180/FFF3E0/3E2723?text=معاينة+الصورة" alt="Preview" class="h-32 w-full object-cover rounded-lg">
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2 lg:col-span-3 flex flex-wrap gap-3 pt-2">
+                            <button type="submit" id="save-prod-btn" class="bg-gradient-to-l from-[#E67E22] to-[#F39C12] hover:from-[#D35400] hover:to-[#E67E22] text-white font-extrabold px-8 py-3 rounded-xl shadow flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> حفظ الصنف ونشره بالموقع
+                            </button>
+                            <button type="button" id="cancel-edit-btn" onclick="resetProductForm()" class="hidden bg-gray-500 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-xl">
+                                إلغاء التعديل
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- قائمة الأصناف الحالية -->
+                <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+                        <h3 class="text-lg font-black text-[#3E2723]">الأصناف الحالية بالموقع</h3>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <input type="text" id="admin-search-prod" oninput="renderAdminProducts()" placeholder="بحث في الأصناف..." class="p-2.5 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] text-sm font-bold flex-1">
+                            <select id="admin-filter-sec" onchange="renderAdminProducts()" class="p-2.5 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] text-sm font-bold">
+                                <option value="all">كل الأقسام</option>
+                                <option value="menu">المنيو</option>
+                                <option value="shop">اشتري القهوة</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="admin-products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- 2. قسم إدارة التصنيفات (Categories) -->
+            <div id="admin-tab-categories" class="hidden space-y-6 pb-12">
+                <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                    <h2 class="text-lg font-black text-[#E67E22] mb-4"><i class="fa-solid fa-folder-plus"></i> إضافة تصنيف (Category) جديد</h2>
+                    <form id="category-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-bold mb-1">القسم التابع له</label>
+                            <select id="cat-section" required class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                                <option value="menu">المنيو</option>
+                                <option value="shop">اشتري القهوة</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم التصنيف بالعربية *</label>
+                            <input type="text" id="cat-name-ar" required maxlength="50" placeholder="مثال: عصائر طازجة" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم التصنيف بالإنجليزية *</label>
+                            <input type="text" id="cat-name-en" required maxlength="50" placeholder="e.g. Fresh Juices" dir="ltr" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                        </div>
+                        <button type="submit" class="bg-[#E67E22] hover:bg-[#D35400] text-white font-extrabold p-3 rounded-xl shadow">
+                            <i class="fa-solid fa-plus"></i> إضافة التصنيف
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                    <h3 class="text-lg font-black mb-4">التصنيفات الحالية</h3>
+                    <div id="admin-categories-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- 3. قسم حالة الكافيه والأمان -->
+            <div id="admin-tab-settings" class="hidden space-y-6 pb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- التحكم بحالة الكافيه -->
+                    <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                        <h3 class="text-lg font-black text-[#E67E22] mb-4"><i class="fa-solid fa-store"></i> التحكم المباشر بحالة الكافيه</h3>
+                        <form id="settings-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">حالة الكافيه الظاهرة للزبائن</label>
+                                <select id="set-force-status" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                                    <option value="auto">تلقائي حسب مواعيد العمل (7 ص - 12 ص / الجمعة 1 م - 1 ص)</option>
+                                    <option value="open">مفتوح الآن (تشغيل يدوي إجباري)</option>
+                                    <option value="closed">مغلق الآن (إغلاق يدوي إجباري)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">رقم واتساب استقبال الطلبات (بكود الدولة)</label>
+                                <input type="text" id="set-whatsapp" dir="ltr" value="201553748198" pattern="[0-9]{10,15}" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                            </div>
+                            <button type="submit" class="w-full bg-[#E67E22] hover:bg-[#D35400] text-white font-extrabold py-3 rounded-xl shadow">
+                                حفظ إعدادات الكافيه
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- تغيير اسم المستخدم وكلمة المرور المشفرة -->
+                    <div class="bg-[#FFFDF9] p-6 rounded-2xl border-2 border-[#F5CBA7] shadow">
+                        <h3 class="text-lg font-black text-[#3E2723] mb-4"><i class="fa-solid fa-user-lock text-[#E67E22]"></i> تحديث بيانات الدخول المشفرة (SHA-256)</h3>
+                        <form id="credentials-change-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">اسم المستخدم الجديد (Username)</label>
+                                <input type="text" id="new-admin-user" required minlength="4" maxlength="30" placeholder="أدخل اسم مستخدم جديد" dir="ltr" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">كلمة المرور الجديدة (Password)</label>
+                                <input type="password" id="new-admin-pass" required minlength="6" maxlength="50" placeholder="أدخل كلمة مرور قوية (6 أحرف على الأقل)" dir="ltr" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">تأكيد كلمة المرور الجديدة</label>
+                                <input type="password" id="confirm-admin-pass" required minlength="6" maxlength="50" placeholder="أعد إدخال كلمة المرور" dir="ltr" class="w-full p-3 rounded-xl border border-[#F5CBA7] bg-[#FAF0E6] font-bold">
+                            </div>
+                            <button type="submit" class="w-full bg-[#3E2723] hover:bg-black text-white font-extrabold py-3 rounded-xl shadow">
+                                تشفير وحفظ بيانات الدخول
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- رسالة تنبيه عائمة -->
+    <div id="admin-toast" class="fixed bottom-5 right-5 bg-[#3E2723] text-[#FFF3E0] px-6 py-3.5 rounded-xl shadow-2xl border border-[#E67E22] font-bold text-sm opacity-0 pointer-events-none transition-all duration-300 z-50"></div>
+
+    <script>
+        // =========================================================================
+        // 1. إعدادات الربط السحابي (اختياري - لمزامنة التعديلات لجميع هواتف الزبائن)
+        // =========================================================================
+        const MY_FIREBASE_CONFIG = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'okka-coffee-live';
+
+        let isAuthenticated = false;
+        let categoriesList = [];
+        let productsList = [];
+        const LOCAL_STORAGE_DATA_KEY = "okka_store_data_v1";
+        const CRYPTO_SALT = "OKKA_SEC_V2_99481_EG";
+        const SESSION_STORAGE_KEY = "okka_admin_session_v1";
+        const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+        let activeUserHash = "";
+        let activePassHash = "";
+        let failedAttempts = 0;
+        let lockoutUntil = 0;
+
+        async function hashWithSalt(rawText) {
+            const salted = `${CRYPTO_SALT}::${rawText.trim()}`;
+            if (window.crypto && window.crypto.subtle) {
+                const msgBuffer = new TextEncoder().encode(salted);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            // بديل آمن في حال فتح الملف عبر بروتوكول http غير مشفر
+            let hash = 0;
+            for (let i = 0; i < salted.length; i++) {
+                hash = ((hash << 5) - hash) + salted.charCodeAt(i);
+                hash |= 0;
+            }
+            return "fallback_" + Math.abs(hash).toString(16);
+        }
+
+        function sanitizeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        function showAdminToast(msg) {
+            const t = document.getElementById('admin-toast');
+            if (!t) return;
+            t.textContent = msg;
+            t.classList.remove('opacity-0');
+            setTimeout(() => t.classList.add('opacity-0'), 3200);
+        }
+
+        function togglePassVisibility() {
+            const inp = document.getElementById('admin-pass-input');
+            const eye = document.getElementById('pass-eye');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                eye.className = 'fa-solid fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                eye.className = 'fa-solid fa-eye';
+            }
+        }
+
+        async function restoreSavedSession() {
+            try {
+                const rawSession = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (!rawSession) return false;
+                const sessionData = JSON.parse(rawSession);
+                if (!sessionData || !sessionData.expiresAt || !sessionData.token || Date.now() > sessionData.expiresAt) {
+                    localStorage.removeItem(SESSION_STORAGE_KEY);
+                    return false;
+                }
+                const expectedToken = await hashWithSalt(`${activeUserHash}:${activePassHash}:${sessionData.expiresAt}`);
+                if (sessionData.token === expectedToken) {
+                    isAuthenticated = true;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                    loadLocalFallbackData();
+                    return true;
+                }
+                localStorage.removeItem(SESSION_STORAGE_KEY);
+                return false;
+            } catch (e) {
+                localStorage.removeItem(SESSION_STORAGE_KEY);
+                return false;
+            }
+        }
+
+        async function saveSession24Hours() {
+            try {
+                const expiresAt = Date.now() + SESSION_MAX_AGE_MS;
+                const token = await hashWithSalt(`${activeUserHash}:${activePassHash}:${expiresAt}`);
+                localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ expiresAt, token }));
+            } catch (e) { console.warn(e); }
+        }
+
+        function loadLocalFallbackData() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_DATA_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    categoriesList = parsed.categories || [];
+                    productsList = parsed.products || [];
+                    if (parsed.settings && parsed.settings.forceStatus) {
+                        document.getElementById('set-force-status').value = parsed.settings.forceStatus;
+                        const mapLabel = { auto: 'تلقائي', open: 'مفتوح يدوياً', closed: 'مغلق يدوياً' };
+                        document.getElementById('stat-status').textContent = mapLabel[parsed.settings.forceStatus] || 'تلقائي';
+                    }
+                    if (parsed.settings && parsed.settings.whatsapp) {
+                        document.getElementById('set-whatsapp').value = parsed.settings.whatsapp;
+                    }
+                }
+                updateDashboardUI();
+            } catch (e) { console.warn(e); }
+        }
+
+        function saveLocalFallbackData(extraSettings = null) {
+            try {
+                const existingRaw = localStorage.getItem(LOCAL_STORAGE_DATA_KEY);
+                const existing = existingRaw ? JSON.parse(existingRaw) : {};
+                const payload = {
+                    categories: categoriesList,
+                    products: productsList,
+                    settings: extraSettings ? { ...(existing.settings || {}), ...extraSettings } : (existing.settings || {})
+                };
+                localStorage.setItem(LOCAL_STORAGE_DATA_KEY, JSON.stringify(payload));
+                if (window.syncToCloudIfAvailable) {
+                    window.syncToCloudIfAvailable(payload);
+                }
+            } catch (e) { console.warn(e); }
+        }
+
+        function updateDashboardUI() {
+            document.getElementById('stat-cats').textContent = categoriesList.length;
+            document.getElementById('stat-menu').textContent = productsList.filter(p => p.section === 'menu').length;
+            document.getElementById('stat-shop').textContent = productsList.filter(p => p.section === 'shop').length;
+            updateCategoryDropdown();
+            renderAdminCategories();
+            renderAdminProducts();
+        }
+
+        // دالة استيراد الأصناف الافتراضية (تعمل فوراً دون انتظار أي مكتبات خارجية)
+        function seedInitialData() {
+            if (!isAuthenticated) {
+                showAdminToast("يرجى تسجيل الدخول أولاً");
+                return;
+            }
+            const defaultCats = [
+                { id: 'cat_hot', nameAr: 'مشروبات ساخنة', nameEn: 'Hot Drinks', section: 'menu' },
+                { id: 'cat_cold', nameAr: 'مشروبات مثلجة', nameEn: 'Cold Drinks', section: 'menu' },
+                { id: 'cat_beans', nameAr: 'حبوب مختصة', nameEn: 'Specialty Beans', section: 'shop' }
+            ];
+            const defaultProds = [
+                { id: 'def_m1', section: 'menu', categoryId: 'cat_hot', nameAr: 'إسبريسو دبل', nameEn: 'Double Espresso', price: 65, available: true, img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=500&q=80' },
+                { id: 'def_m2', section: 'menu', categoryId: 'cat_hot', nameAr: 'كابتشينو كريمي', nameEn: 'Creamy Cappuccino', price: 85, available: true, img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=500&q=80' },
+                { id: 'def_m3', section: 'menu', categoryId: 'cat_cold', nameAr: 'لاتيه بارد', nameEn: 'Iced Latte', price: 90, available: true, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=500&q=80' },
+                { id: 'def_m4', section: 'menu', categoryId: 'cat_hot', nameAr: 'كراميل ماكياتو', nameEn: 'Caramel Macchiato', price: 95, available: true, img: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=500&q=80' },
+                { id: 'def_s1', section: 'shop', categoryId: 'cat_beans', nameAr: 'حبوب إثيوبية مختصة (250ج)', nameEn: 'Ethiopian Specialty Beans (250g)', price: 280, available: true, img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=500&q=80' },
+                { id: 'def_s2', section: 'shop', categoryId: 'cat_beans', nameAr: 'خليط إسبريسو مميز (500ج)', nameEn: 'Signature Espresso Blend (500g)', price: 450, available: true, img: 'https://images.unsplash.com/photo-1611854779393-1b2da9d401fe?auto=format&fit=crop&w=500&q=80' }
+            ];
+
+            categoriesList = [...defaultCats];
+            productsList = [...defaultProds];
+            saveLocalFallbackData();
+            updateDashboardUI();
+            showAdminToast("تم استيراد التصنيفات والأصناف الافتراضية بنجاح!");
+        }
+
+        function switchAdminTab(tabName) {
+            ['products', 'categories', 'settings'].forEach(t => {
+                document.getElementById('admin-tab-' + t).classList.add('hidden');
+                const btn = document.getElementById('tab-btn-' + t);
+                btn.className = 'px-5 py-2.5 rounded-xl font-extrabold text-sm bg-[#FFFDF9] text-[#3E2723] border border-[#F5CBA7] hover:bg-[#FFF3E0] transition';
+            });
+            document.getElementById('admin-tab-' + tabName).classList.remove('hidden');
+            document.getElementById('tab-btn-' + tabName).className = 'px-5 py-2.5 rounded-xl font-extrabold text-sm bg-[#E67E22] text-white shadow transition';
+        }
+
+        function updateCategoryDropdown() {
+            const sec = document.getElementById('prod-section').value;
+            const select = document.getElementById('prod-category');
+            const filtered = categoriesList.filter(c => c.section === sec);
+
+            if (filtered.length === 0) {
+                select.innerHTML = `<option value="">-- أضف تصنيفاً أولاً أو اضغط استيراد --</option>`;
+            } else {
+                select.innerHTML = filtered.map(c => `<option value="${sanitizeHTML(c.id)}">${sanitizeHTML(c.nameAr)} (${sanitizeHTML(c.nameEn)})</option>`).join('');
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 550;
+                    const scale = MAX_WIDTH / img.width;
+                    canvas.width = img.width > MAX_WIDTH ? MAX_WIDTH : img.width;
+                    canvas.height = img.width > MAX_WIDTH ? img.height * scale : img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+                    document.getElementById('prod-img-url').value = compressedDataUrl;
+                    document.getElementById('prod-img-preview').src = compressedDataUrl;
+                    showAdminToast("تم ضغط الصورة وتجهيزها بنجاح");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewImageFromUrl() {
+            const url = document.getElementById('prod-img-url').value.trim();
+            if (url && (url.startsWith('https://') || url.startsWith('http://') || url.startsWith('data:image/'))) {
+                document.getElementById('prod-img-preview').src = url;
+            }
+        }
+
+        function editProduct(id) {
+            const p = productsList.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-section').value = p.section;
+            updateCategoryDropdown();
+            document.getElementById('prod-category').value = p.categoryId || '';
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-name-ar').value = p.nameAr;
+            document.getElementById('prod-name-en').value = p.nameEn || '';
+            document.getElementById('prod-available').value = p.available !== false ? 'true' : 'false';
+            document.getElementById('prod-img-url').value = p.img || '';
+            document.getElementById('prod-img-preview').src = p.img || 'https://placehold.co/300x180/FFF3E0/3E2723?text=okka';
+            document.getElementById('product-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> تعديل الصنف: ${sanitizeHTML(p.nameAr)}`;
+            document.getElementById('save-prod-btn').innerHTML = `<i class="fa-solid fa-check"></i> حفظ التعديلات`;
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('prod-img-preview').src = 'https://placehold.co/300x180/FFF3E0/3E2723?text=معاينة+الصورة';
+            document.getElementById('product-form-title').innerHTML = `<i class="fa-solid fa-plus-circle"></i> إضافة صنف أو منتج جديد`;
+            document.getElementById('save-prod-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ الصنف ونشره بالموقع`;
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+            updateCategoryDropdown();
+        }
+
+        function deleteProduct(id) {
+            if (!isAuthenticated) return;
+            productsList = productsList.filter(p => p.id !== id);
+            saveLocalFallbackData();
+            updateDashboardUI();
+            showAdminToast("تم حذف الصنف نهائياً");
+            if (window.deleteCloudDoc) window.deleteCloudDoc('products', id);
+        }
+
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-products-list');
+            const query = document.getElementById('admin-search-prod').value.trim().toLowerCase();
+            const secFilter = document.getElementById('admin-filter-sec').value;
+
+            const filtered = productsList.filter(p => {
+                const matchSec = secFilter === 'all' || p.section === secFilter;
+                const matchQ = (p.nameAr || '').toLowerCase().includes(query) || (p.nameEn || '').toLowerCase().includes(query);
+                return matchSec && matchQ;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-[#8D6E63] py-6 font-bold">لا توجد أصناف حالياً. اضغط على زر "استيراد الأصناف الافتراضية" بالأعلى.</p>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(p => {
+                const catObj = categoriesList.find(c => c.id === p.categoryId);
+                const catName = catObj ? sanitizeHTML(catObj.nameAr) : 'بدون تصنيف';
+                const secBadge = p.section === 'menu' ? 'المنيو' : 'اشتري القهوة';
+                return `
+                    <div class="bg-[#FAF0E6] rounded-2xl border border-[#F5CBA7] overflow-hidden flex flex-col shadow-sm">
+                        <img src="${sanitizeHTML(p.img)}" class="h-36 w-full object-cover" onerror="this.src='https://placehold.co/400x250/FFF3E0/3E2723?text=okka'">
+                        <div class="p-4 flex-1 flex flex-col">
+                            <div class="flex justify-between items-center text-xs font-bold mb-1">
+                                <span class="bg-[#E67E22] text-white px-2.5 py-0.5 rounded-lg">${secBadge} • ${catName}</span>
+                                <span class="${p.available !== false ? 'text-green-700' : 'text-red-600'}">${p.available !== false ? 'متوفر' : 'مخفي'}</span>
+                            </div>
+                            <h4 class="font-black text-base mt-1">${sanitizeHTML(p.nameAr)}</h4>
+                            <p class="text-xs text-[#8D6E63] font-semibold mb-2">${sanitizeHTML(p.nameEn || '')}</p>
+                            <div class="text-lg font-black text-[#E67E22] mb-3">${Number(p.price)} ج.م</div>
+                            <div class="mt-auto flex gap-2">
+                                <button onclick="editProduct('${sanitizeHTML(p.id)}')" class="flex-1 bg-[#3E2723] hover:bg-black text-white text-xs font-bold py-2.5 rounded-xl transition">
+                                    <i class="fa-solid fa-pen"></i> تعديل
+                                </button>
+                                <button onclick="deleteProduct('${sanitizeHTML(p.id)}')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteCategory(id) {
+            if (!isAuthenticated) return;
+            categoriesList = categoriesList.filter(c => c.id !== id);
+            saveLocalFallbackData();
+            updateDashboardUI();
+            showAdminToast("تم حذف التصنيف");
+            if (window.deleteCloudDoc) window.deleteCloudDoc('categories', id);
+        }
+
+        function renderAdminCategories() {
+            const container = document.getElementById('admin-categories-list');
+            if (categoriesList.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-[#8D6E63] py-4 font-bold">لا توجد تصنيفات مضافة بعد.</p>`;
+                return;
+            }
+            container.innerHTML = categoriesList.map(c => `
+                <div class="bg-[#FAF0E6] p-4 rounded-xl border border-[#F5CBA7] flex justify-between items-center shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-[#E67E22]">${c.section === 'menu' ? 'المنيو' : 'اشتري القهوة'}</span>
+                        <h4 class="font-black text-base">${sanitizeHTML(c.nameAr)}</h4>
+                        <span class="text-xs text-[#8D6E63] font-semibold">${sanitizeHTML(c.nameEn || '')}</span>
+                    </div>
+                    <button onclick="deleteCategory('${sanitizeHTML(c.id)}')" class="bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-xl text-xs transition">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function logoutAdmin() {
+            isAuthenticated = false;
+            localStorage.removeItem(SESSION_STORAGE_KEY);
+            document.getElementById('admin-user-input').value = '';
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        // تهيئة مستمعي النماذج فوراً عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', async () => {
+            const savedCreds = localStorage.getItem("okka_admin_creds_v1");
+            if (savedCreds) {
+                const parsedCreds = JSON.parse(savedCreds);
+                activeUserHash = parsedCreds.userHash;
+                activePassHash = parsedCreds.passHash;
+            } else {
+                activeUserHash = await hashWithSalt("admin");
+                activePassHash = await hashWithSalt("okka2026");
+            }
+            await restoreSavedSession();
+
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errBox = document.getElementById('login-error');
+                if (Date.now() < lockoutUntil) {
+                    const secs = Math.ceil((lockoutUntil - Date.now()) / 1000);
+                    errBox.textContent = `تم إيقاف المحاولات مؤقتاً. انتظر ${secs} ثانية.`;
+                    errBox.classList.remove('hidden');
+                    return;
+                }
+                const rawUser = document.getElementById('admin-user-input').value.trim().toLowerCase();
+                const rawPass = document.getElementById('admin-pass-input').value;
+                const inputUserHash = await hashWithSalt(rawUser);
+                const inputPassHash = await hashWithSalt(rawPass);
+
+                if (inputUserHash === activeUserHash && inputPassHash === activePassHash) {
+                    failedAttempts = 0;
+                    isAuthenticated = true;
+                    if (document.getElementById('remember-24h').checked) {
+                        await saveSession24Hours();
+                    }
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                    errBox.classList.add('hidden');
+                    loadLocalFallbackData();
+                    showAdminToast("تم تسجيل الدخول بنجاح!");
+                } else {
+                    failedAttempts++;
+                    if (failedAttempts >= 5) {
+                        lockoutUntil = Date.now() + 60000;
+                        errBox.textContent = "تم قفل الدخول لمدة 60 ثانية بسبب تكرار المحاولات الخاطئة.";
+                    } else {
+                        errBox.textContent = `بيانات الدخول غير صحيحة! (المتبقي ${5 - failedAttempts} محاولات)`;
+                    }
+                    errBox.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('product-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!isAuthenticated) return;
+                const editId = document.getElementById('edit-product-id').value;
+                const priceVal = parseFloat(document.getElementById('prod-price').value);
+                if (isNaN(priceVal) || priceVal <= 0) return;
+
+                const rawImg = document.getElementById('prod-img-url').value.trim();
+                const safeImg = (rawImg.startsWith('https://') || rawImg.startsWith('http://') || rawImg.startsWith('data:image/'))
+                    ? rawImg : 'https://placehold.co/500x350/FFF3E0/3E2723?text=okka+Coffee';
+
+                const payload = {
+                    section: document.getElementById('prod-section').value === 'shop' ? 'shop' : 'menu',
+                    categoryId: document.getElementById('prod-category').value,
+                    price: priceVal,
+                    nameAr: document.getElementById('prod-name-ar').value.trim(),
+                    nameEn: document.getElementById('prod-name-en').value.trim(),
+                    available: document.getElementById('prod-available').value === 'true',
+                    img: safeImg
+                };
+
+                const itemId = editId || ('prod_' + Date.now());
+                if (editId) {
+                    const idx = productsList.findIndex(p => p.id === editId);
+                    if (idx !== -1) productsList[idx] = { id: editId, ...payload };
+                    showAdminToast("تم تحديث بيانات الصنف بنجاح!");
+                } else {
+                    productsList.push({ id: itemId, ...payload });
+                    showAdminToast("تم إضافة الصنف الجديد بنجاح!");
+                }
+                saveLocalFallbackData();
+                updateDashboardUI();
+                resetProductForm();
+            });
+
+            document.getElementById('category-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!isAuthenticated) return;
+                const newCat = {
+                    id: 'cat_' + Date.now(),
+                    section: document.getElementById('cat-section').value === 'shop' ? 'shop' : 'menu',
+                    nameAr: document.getElementById('cat-name-ar').value.trim(),
+                    nameEn: document.getElementById('cat-name-en').value.trim()
+                };
+                categoriesList.push(newCat);
+                saveLocalFallbackData();
+                updateDashboardUI();
+                document.getElementById('category-form').reset();
+                showAdminToast("تم إضافة التصنيف الجديد بنجاح!");
+            });
+
+            document.getElementById('settings-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!isAuthenticated) return;
+                const newSettings = {
+                    forceStatus: document.getElementById('set-force-status').value,
+                    whatsapp: document.getElementById('set-whatsapp').value.trim()
+                };
+                saveLocalFallbackData(newSettings);
+                const mapLabel = { auto: 'تلقائي', open: 'مفتوح يدوياً', closed: 'مغلق يدوياً' };
+                document.getElementById('stat-status').textContent = mapLabel[newSettings.forceStatus] || 'تلقائي';
+                showAdminToast("تم حفظ إعدادات الكافيه!");
+            });
+
+            document.getElementById('credentials-change-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!isAuthenticated) return;
+                const newUser = document.getElementById('new-admin-user').value.trim().toLowerCase();
+                const p1 = document.getElementById('new-admin-pass').value;
+                const p2 = document.getElementById('confirm-admin-pass').value;
+                if (p1 !== p2) {
+                    showAdminToast("كلمتا المرور غير متطابقتين!");
+                    return;
+                }
+                activeUserHash = await hashWithSalt(newUser);
+                activePassHash = await hashWithSalt(p1);
+                localStorage.setItem("okka_admin_creds_v1", JSON.stringify({ userHash: activeUserHash, passHash: activePassHash }));
+                await saveSession24Hours();
+                document.getElementById('credentials-change-form').reset();
+                showAdminToast("تم تشفير وحفظ بيانات الدخول الجديدة!");
+            });
+        });
+    </script>
+
+    <!-- وحدة المزامنة السحابية الاختيارية (لا تعطل الصفحة في حال عدم وجود اتصال Firebase) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        if (MY_FIREBASE_CONFIG) {
+            try {
+                const app = initializeApp(MY_FIREBASE_CONFIG);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+
+                (async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    window.syncToCloudIfAvailable = async (payload) => {
+                        for (const c of (payload.categories || [])) {
+                            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'categories', c.id), c);
+                        }
+                        for (const p of (payload.products || [])) {
+                            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', p.id), p);
+                        }
+                        if (payload.settings) {
+                            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'general'), payload.settings, { merge: true });
+                        }
+                    };
+
+                    window.deleteCloudDoc = async (colName, docId) => {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', colName, docId));
+                    };
+
+                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'categories'), (snap) => {
+                        if (!snap.empty) {
+                            categoriesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                            updateDashboardUI();
+                        }
+                    });
+
+                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
+                        if (!snap.empty) {
+                            productsList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                            updateDashboardUI();
+                        }
+                    });
+                })();
+            } catch (e) {
+                console.warn("Cloud sync offline, local mode active.");
+            }
+        }
+    </script>
+</body>
+</html>

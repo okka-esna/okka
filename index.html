@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>okka - Coffee Shop & Cafe</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* ألوان Warm Latte البرتقالية الكريمية الفاتحة والمشرقة */
+            --bg-color: #FFF3E0;
+            --text-color: #3E2723;
+            --primary-color: #E67E22;
+            --primary-hover: #D35400;
+            --accent-color: #FFE0B2;
+            --card-bg: #FFFDF9;
+            --nav-bg: rgba(78, 52, 46, 0.96);
+            --nav-text: #FFF8E7;
+            --footer-bg: #3E2723;
+            --latte-tint: #FAF0E6;
+            --border-latte: #F5CBA7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1F1714;
+            --text-color: #F5EBE0;
+            --primary-color: #F39C12;
+            --primary-hover: #E67E22;
+            --accent-color: #3D2B22;
+            --card-bg: #2B211C;
+            --nav-bg: rgba(31, 23, 20, 0.98);
+            --nav-text: #F5EBE0;
+            --footer-bg: #17110E;
+            --latte-tint: #261C18;
+            --border-latte: #4A352A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* 1. Header الهيدر واللوجو */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            color: var(--nav-text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4%;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(62, 39, 35, 0.18);
+            backdrop-filter: blur(8px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-icon-wrapper {
+            width: 46px;
+            height: 46px;
+            background: #FFF3E0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(230, 126, 34, 0.4);
+            padding: 2px;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .logo-svg-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #FFF3E0;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .logo-text span {
+            font-size: 10px;
+            color: #F39C12;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+        }
+
+        /* شريط التنقل على شاشات الكمبيوتر */
+        @media (min-width: 901px) {
+            .main-nav {
+                position: fixed;
+                top: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1001;
+            }
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .main-nav ul li button {
+            background: none;
+            border: none;
+            color: var(--nav-text);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .main-nav ul li button i {
+            display: none;
+        }
+
+        .main-nav ul li button:hover, .main-nav ul li button.active {
+            color: #F39C12;
+            background: rgba(255, 243, 224, 0.08);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background: rgba(255, 243, 224, 0.14);
+            border: 1px solid rgba(255, 243, 224, 0.2);
+            color: var(--nav-text);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            position: relative;
+            min-width: 40px;
+            min-height: 40px;
+        }
+
+        .control-btn:hover {
+            background: rgba(230, 126, 34, 0.35);
+        }
+
+        .cart-badge {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            font-weight: 800;
+        }
+
+        main {
+            margin-top: 66px;
+            flex: 1;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* 2. Hero Section مع تدرج Warm Latte Overlay برتقالي كريمي وصورة واجهة المقهى */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - 66px);
+            background: 
+                linear-gradient(135deg, rgba(135, 67, 29, 0.72), rgba(230, 126, 34, 0.45), rgba(62, 39, 35, 0.82)),
+                url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1920&q=85') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #FFFDF9;
+            padding: 50px 20px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .hero-badge {
+            background: linear-gradient(90deg, #E67E22, #F39C12);
+            color: #FFFDF9;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', 'Cairo', serif;
+            font-size: 44px;
+            margin-bottom: 18px;
+            font-weight: 800;
+            color: #FFF8EB;
+            line-height: 1.3;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #FFF3E0;
+            line-height: 1.7;
+            font-weight: 600;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 38px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #E67E22, #F39C12);
+            color: #ffffff;
+            padding: 15px 36px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 18px;
+            border: 2px solid rgba(255, 243, 224, 0.4);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.5);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #D35400, #E67E22);
+            transform: translateY(-3px);
+        }
+
+        /* 3. الأعمدة الأربعة: أزرار التواصل بألوانها الرسمية + مربع حالة الكافيه */
+        .social-columns-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .social-col-card {
+            padding: 20px 14px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .social-col-card:hover {
+            transform: translateY(-5px);
+            filter: brightness(1.08);
+        }
+
+        .social-col-card i {
+            font-size: 28px;
+            color: #ffffff;
+        }
+
+        .social-col-card span {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .btn-facebook { background-color: #1877F2; }
+        .btn-whatsapp { background-color: #25D366; }
+        .btn-maps { background-color: #EA4335; }
+
+        /* مربع حالة الكافيه المخصص بالكامل */
+        .cafe-status-card {
+            background: rgba(255, 248, 238, 0.96);
+            color: #3E2723;
+            border: 2px solid #F5CBA7;
+            cursor: default;
+            padding: 18px 12px;
+        }
+
+        .cafe-status-card:hover {
+            transform: none;
+            filter: none;
+        }
+
+        .status-header-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #8D6E63;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-header-label i {
+            font-size: 15px;
+            color: var(--primary-color);
+        }
+
+        .status-dot-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        .status-pulse {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .status-open {
+            background-color: #2ecc71;
+            box-shadow: 0 0 12px #2ecc71;
+            animation: pulse-green 1.8s infinite;
+        }
+
+        .status-closed {
+            background-color: #e74c3c;
+            box-shadow: 0 0 12px #e74c3c;
+            animation: pulse-red 1.8s infinite;
+        }
+
+        #cafe-status-text {
+            font-size: 19px;
+            font-weight: 900;
+            color: #3E2723;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.75); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.75); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        /* 4. مميزات الموقع بخلفية Warm Latte فاتحة */
+        .features-section {
+            padding: 65px 5%;
+            background-color: var(--latte-tint);
+            text-align: center;
+            border-top: 1px solid var(--border-latte);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-box {
+            background-color: var(--card-bg);
+            padding: 35px 20px;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(230, 126, 34, 0.08);
+            border: 2px solid var(--border-latte);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-box i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-box h3 {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        /* 5. المنيو والمتجر */
+        .container-section {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', 'Cairo', serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            color: var(--primary-color);
+        }
+
+        .search-bar-container {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 48px 14px 20px;
+            border-radius: 14px;
+            border: 2px solid var(--border-latte);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(230, 126, 34, 0.08);
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        html[dir="ltr"] .search-input {
+            padding: 14px 20px 14px 48px;
+        }
+
+        html[dir="ltr"] .search-icon {
+            right: auto;
+            left: 18px;
+        }
+
+        .grid-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .categories-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .cat-pill {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-latte);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .cat-pill:hover, .cat-pill.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(230, 126, 34, 0.09);
+            border: 1px solid var(--border-latte);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .product-img {
+            height: 190px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .product-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .product-cat-badge {
+            font-size: 11px;
+            background: var(--accent-color);
+            color: var(--text-color);
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            width: fit-content;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .add-to-cart-btn {
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* 6. الفوتر */
+        footer {
+            background-color: var(--footer-bg);
+            color: #FFF3E0;
+            padding: 50px 5% 22px;
+            margin-top: auto;
+        }
+
+        .footer-content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto 30px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Playfair Display', 'Cairo', serif;
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #F39C12;
+        }
+
+        .footer-col p, .footer-col ul {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.8;
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 22px;
+            border-top: 1px solid rgba(255, 243, 224, 0.12);
+            font-size: 14px;
+            opacity: 0.85;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .developer-credit {
+            background: rgba(255, 243, 224, 0.08);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #F39C12;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .developer-credit a {
+            color: #FFF3E0;
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .developer-credit a:hover {
+            color: #25D366;
+        }
+
+        /* 7. سلة المشتريات الجانبية */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background-color: var(--card-bg);
+            z-index: 2000;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.25);
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 22px;
+        }
+
+        .cart-modal.open {
+            left: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-latte);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--latte-tint);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-latte);
+        }
+
+        .cart-footer {
+            border-top: 1px solid var(--border-latte);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .checkout-whatsapp-btn {
+            width: 100%;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkout-whatsapp-btn:hover {
+            filter: brightness(1.06);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(62, 39, 35, 0.5);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background-color: var(--footer-bg);
+            color: #FFF3E0;
+            padding: 14px 22px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            border: 1px solid var(--primary-color);
+            font-weight: 700;
+            z-index: 3000;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* تنسيق شاشات الهواتف والأجهزة اللوحية */
+        @media (max-width: 900px) {
+            body {
+                padding-bottom: 70px;
+            }
+            header {
+                padding: 8px 3.5%;
+                justify-content: space-between;
+                gap: 6px;
+                height: 60px;
+            }
+            .logo-icon-wrapper {
+                width: 40px;
+                height: 40px;
+            }
+            .logo-svg-img {
+                width: 34px;
+                height: 34px;
+            }
+            .logo-text h1 {
+                font-size: 20px;
+            }
+            .logo-text span {
+                font-size: 8.5px;
+                letter-spacing: 1px;
+            }
+            .nav-controls {
+                display: flex !important;
+                align-items: center;
+                gap: 6px;
+                flex-shrink: 0;
+            }
+            .control-btn {
+                padding: 6px 9px;
+                min-width: 36px;
+                min-height: 36px;
+                font-size: 13px;
+            }
+            /* شريط تنقل سفلي ثابت في أسفل الشاشة على الهواتف */
+            .main-nav {
+                position: fixed !important;
+                top: auto !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                transform: none !important;
+                width: 100% !important;
+                background-color: var(--card-bg);
+                border-top: 1px solid var(--border-latte);
+                padding: 6px 0 8px;
+                z-index: 1200;
+                box-shadow: 0 -4px 20px rgba(62, 39, 35, 0.16);
+            }
+            .main-nav ul {
+                width: 100%;
+                justify-content: space-around;
+                gap: 0;
+            }
+            .main-nav ul li {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+            }
+            .main-nav ul li button {
+                flex-direction: column;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 800;
+                padding: 4px 8px;
+                gap: 4px;
+                width: 100%;
+                border-radius: 0;
+                color: var(--text-color);
+                opacity: 0.7;
+                position: relative;
+            }
+            .main-nav ul li button i {
+                display: block;
+                font-size: 19px;
+            }
+            .main-nav ul li button:hover, .main-nav ul li button.active {
+                background: transparent;
+                color: var(--primary-color);
+                opacity: 1;
+            }
+            .main-nav ul li button.active::before {
+                content: '';
+                position: absolute;
+                top: -6px;
+                width: 32px;
+                height: 3px;
+                background-color: var(--primary-color);
+                border-radius: 0 0 4px 4px;
+            }
+            main {
+                margin-top: 60px;
+            }
+            .hero {
+                min-height: calc(100vh - 130px);
+                padding: 35px 15px;
+            }
+            .hero-badge {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .hero p {
+                font-size: 15px;
+                margin-bottom: 24px;
+            }
+            .btn-primary {
+                padding: 12px 26px;
+                font-size: 16px;
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+            .social-columns-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .social-col-card {
+                padding: 16px 10px;
+            }
+            .social-col-card i {
+                font-size: 24px;
+            }
+            .social-col-card span {
+                font-size: 14px;
+            }
+            #cafe-status-text {
+                font-size: 16px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .section-title {
+                font-size: 28px;
+            }
+            .grid-products {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .logo-text span {
+                display: none;
+            }
+            .control-btn {
+                padding: 6px 8px;
+                min-width: 34px;
+                min-height: 34px;
+            }
+            .hero h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Header الهيدر العلوي -->
+    <header>
+        <div class="logo-container" onclick="switchView('home')">
+            <div class="logo-icon-wrapper">
+                <svg class="logo-svg-img" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="95" fill="#8B4513"/>
+                    <circle cx="100" cy="100" r="85" stroke="#FFFFFF" stroke-width="4"/>
+                    <circle cx="100" cy="100" r="75" fill="#6F3709"/>
+                    <path d="M45 100 C40 90, 50 80, 50 100 C50 120, 40 110, 45 100 Z" fill="#FFFFFF"/>
+                    <path d="M155 100 C150 90, 160 80, 160 100 C160 120, 150 110, 155 100 Z" fill="#FFFFFF"/>
+                    <path id="textPathTop" d="M 30,100 A 70,70 0 1,1 170,100" fill="none"/>
+                    <text font-family="Cairo, Arial" font-size="16" font-weight="900" fill="#FFFFFF" text-anchor="middle">
+                        <textPath href="#textPathTop" startOffset="50%">COFFEE SHOP</textPath>
+                    </text>
+                    <path id="textPathBottom" d="M 170,100 A 70,70 0 0,1 30,100" fill="none"/>
+                    <text font-family="Cairo, Arial" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">
+                        <textPath href="#textPathBottom" startOffset="50%">PREMIUM QUALITY</textPath>
+                    </text>
+                    <circle cx="100" cy="108" r="42" fill="#542905"/>
+                    <path d="M 72 100 L 128 100 C 126 122, 114 132, 100 132 C 86 132, 74 122, 72 100 Z" fill="#FFFFFF"/>
+                    <path d="M 76 104 L 124 104 C 122 120, 112 128, 100 128 C 88 128, 78 120, 76 104 Z" fill="#8B4513"/>
+                    <path d="M 126 104 C 138 104, 138 122, 122 122" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+                    <path d="M 88 94 C 86 86, 92 82, 90 74" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <path d="M 100 94 C 98 84, 104 80, 102 70" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                    <path d="M 112 94 C 110 86, 116 82, 114 74" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <h1>okka</h1>
+                <span>Coffee Shop & Cafe</span>
+            </div>
+        </div>
+        <div class="nav-controls">
+            <button class="control-btn" onclick="toggleCart()"><i class="fa-solid fa-basket-shopping"></i> <span class="cart-badge" id="cart-count">0</span></button>
+            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+            <button class="control-btn" id="lang-toggle" onclick="toggleLanguage()">EN</button>
+        </div>
+    </header>
+
+    <!-- شريط التنقل المستقل (في الأعلى للكمبيوتر وفي الأسفل للهواتف) -->
+    <nav class="main-nav">
+        <ul>
+            <li><button onclick="switchView('home')" id="nav-home" class="active"><i class="fa-solid fa-house"></i> <span id="nav-home-txt">الرئيسية</span></button></li>
+            <li><button onclick="switchView('menu')" id="nav-menu"><i class="fa-solid fa-mug-saucer"></i> <span id="nav-menu-txt">المنيو</span></button></li>
+            <li><button onclick="switchView('shop')" id="nav-shop"><i class="fa-solid fa-bag-shopping"></i> <span id="nav-shop-txt">اشتري القهوة</span></button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- 1. الصفحة الرئيسية -->
+        <section id="view-home" class="view-section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="hero-badge" id="hero-badge"><i class="fa-solid fa-mug-hot"></i> مرحباً بك في وجهتك المفضلة للقهوة المختصة</div>
+                    <h1 id="hero-title">استمتع بأجمل الأوقات وألذ المشروبات في okka</h1>
+                    <p id="hero-desc">نقدم لك أشهى المشروبات المصنوعة بكل حب والمخبوزات الطازجة يومياً مع أجود حبوب القهوة المحمصة خصيصاً لك.</p>
+                    
+                    <div class="hero-buttons">
+                        <button onclick="switchView('menu')" class="btn-primary" id="btn-menu-link">
+                            <i class="fa-solid fa-mug-saucer"></i> <span id="btn-menu-text">تصفح المنيو</span>
+                        </button>
+                    </div>
+
+                    <!-- الأعمدة الأربعة: فيسبوك، واتساب، الموقع، ومربع حالة الكافيه -->
+                    <div class="social-columns-grid">
+                        <a href="https://www.facebook.com/Okkacoffe/" target="_blank" class="social-col-card btn-facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                            <span id="lbl-fb">فيسبوك</span>
+                        </a>
+                        <a href="https://wa.me/201553748198" target="_blank" class="social-col-card btn-whatsapp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span id="lbl-wa">واتساب</span>
+                        </a>
+                        <a href="https://maps.app.goo.gl/RVQKHQnv19ga77xdA" target="_blank" class="social-col-card btn-maps">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="lbl-map">الموقع</span>
+                        </a>
+                        <div class="social-col-card cafe-status-card">
+                            <div class="status-header-label">
+                                <i class="fa-solid fa-store"></i>
+                                <span id="status-title-lbl" style="font-size: 13px; color: #8D6E63; font-weight: 700;">حالة الكافيه</span>
+                            </div>
+                            <div class="status-dot-container">
+                                <span class="status-pulse" id="cafe-status-indicator"></span>
+                                <span id="cafe-status-text">جاري التحقق...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- مميزات الموقع الثلاثة -->
+            <section class="features-section">
+                <div class="features-grid">
+                    <div class="feature-box">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                        <h3 id="feat-1">تحميص طازج</h3>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <h3 id="feat-2">توصيل سريع</h3>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fa-solid fa-seedling"></i>
+                        <h3 id="feat-3">حبوب مختارة</h3>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- 2. المنيو -->
+        <section id="view-menu" class="view-section container-section">
+            <h2 class="section-title" id="menu-sec-title">المنيو</h2>
+            <div class="search-bar-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="menu-search-input" class="search-input" placeholder="ابحث باسم المشروب..." oninput="renderMenu()">
+            </div>
+            <div class="categories-filter" id="menu-categories-bar"></div>
+            <div class="grid-products" id="menu-grid"></div>
+        </section>
+
+        <!-- 3. اشتري القهوة -->
+        <section id="view-shop" class="view-section container-section">
+            <h2 class="section-title" id="shop-sec-title">اشتري القهوة</h2>
+            <div class="categories-filter" id="shop-categories-bar"></div>
+            <div class="grid-products" id="shop-grid"></div>
+        </section>
+    </main>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="footer-content-grid">
+            <div class="footer-col">
+                <h4 id="ft-about-title">عن okka Coffee</h4>
+                <p id="ft-about-desc">وجهتك الأولى للاستمتاع بأجود أنواع القهوة المختصة والمحمصة بعناية فائقة لتناسب ذوقك الرفيع.</p>
+            </div>
+            <div class="footer-col">
+                <h4 id="ft-hours-title">مواعيد العمل</h4>
+                <ul>
+                    <li><i class="fa-regular fa-clock"></i> <span id="ft-hours-1">السبت - الخميس: 7:00 ص - 12:00 ص</span></li>
+                    <li><i class="fa-regular fa-clock"></i> <span id="ft-hours-2">الجمعة: 1:00 م - 1:00 ص</span></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 id="ft-contact-title">بيانات الاتصال</h4>
+                <ul>
+                    <li><i class="fa-solid fa-phone"></i> <span dir="ltr">015 53748198</span></li>
+                    <li><i class="fa-solid fa-envelope"></i> Aoka474@gmail.com</li>
+                    <li><i class="fa-solid fa-location-dot"></i> <span id="ft-address">شارع القهوة الرئيسية، المدينة</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div id="footer-copy">&copy; 2026 okka Coffee Shop & Cafe. جميع الحقوق محفوظة.</div>
+            <div class="developer-credit" id="developer-credit">
+                <span>تصميم شركة الباشا</span>
+                <span>|</span>
+                <a href="tel:01025411955" dir="ltr"><i class="fa-solid fa-phone"></i> 01025411955</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- سلة المشتريات الجانبية -->
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-header">
+            <h3 id="cart-modal-title">سلة المشتريات</h3>
+            <button onclick="toggleCart()" style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-color);"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <p style="text-align:center; opacity:0.6; margin-top:20px;">السلة فارغة حالياً</p>
+        </div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px; margin-bottom:10px;">
+                <span id="cart-total-lbl">الإجمالي:</span>
+                <span id="cart-total">0 ج.م</span>
+            </div>
+            <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">
+                <i class="fa-brands fa-whatsapp" style="font-size:22px;"></i> <span id="checkout-btn-lbl">إرسال الطلب عبر الواتساب</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- رسالة تنبيه مخصصة -->
+    <div class="toast-msg" id="toast-msg"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'okka-coffee-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        let db = null;
+
+        if (firebaseConfig) {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            db = getFirestore(app);
+
+            (async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    subscribeToStoreData();
+                } catch (err) {
+                    console.error("Auth init error:", err);
+                }
+            })();
+        }
+
+        const defaultCategories = [
+            { id: 'cat_hot', nameAr: 'مشروبات ساخنة', nameEn: 'Hot Drinks', section: 'menu' },
+            { id: 'cat_cold', nameAr: 'مشروبات مثلجة', nameEn: 'Cold Drinks', section: 'menu' },
+            { id: 'cat_beans', nameAr: 'حبوب مختصة', nameEn: 'Specialty Beans', section: 'shop' }
+        ];
+
+        const defaultItems = [
+            { id: 'm1', section: 'menu', categoryId: 'cat_hot', nameAr: 'إسبريسو دبل', nameEn: 'Double Espresso', price: 65, available: true, img: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=500&q=80' },
+            { id: 'm2', section: 'menu', categoryId: 'cat_hot', nameAr: 'كابتشينو كريمي', nameEn: 'Creamy Cappuccino', price: 85, available: true, img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=500&q=80' },
+            { id: 'm3', section: 'menu', categoryId: 'cat_cold', nameAr: 'لاتيه بارد', nameEn: 'Iced Latte', price: 90, available: true, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=500&q=80' },
+            { id: 'm4', section: 'menu', categoryId: 'cat_hot', nameAr: 'كراميل ماكياتو', nameEn: 'Caramel Macchiato', price: 95, available: true, img: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=500&q=80' },
+            { id: 's1', section: 'shop', categoryId: 'cat_beans', nameAr: 'حبوب إثيوبية مختصة (250ج)', nameEn: 'Ethiopian Specialty Beans (250g)', price: 280, available: true, img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=500&q=80' },
+            { id: 's2', section: 'shop', categoryId: 'cat_beans', nameAr: 'خليط إسبريسو مميز (500ج)', nameEn: 'Signature Espresso Blend (500g)', price: 450, available: true, img: 'https://images.unsplash.com/photo-1611854779393-1b2da9d401fe?auto=format&fit=crop&w=500&q=80' },
+            { id: 's3', section: 'shop', categoryId: 'cat_beans', nameAr: 'بن كولومبي فاخر (250ج)', nameEn: 'Premium Colombian Beans (250g)', price: 310, available: true, img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=500&q=80' }
+        ];
+
+        let allCategories = [...defaultCategories];
+        let allProducts = [...defaultItems];
+        let selectedMenuCat = 'all';
+        let selectedShopCat = 'all';
+        let cart = [];
+        let currentLang = 'ar';
+        let storeSettings = {
+            whatsapp: '201553748198',
+            phone: '015 53748198',
+            email: 'Aoka474@gmail.com',
+            forceStatus: 'auto'
+        };
+
+        function loadSyncedLocalData() {
+            try {
+                const raw = localStorage.getItem("okka_store_data_v1");
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.categories && parsed.categories.length) allCategories = parsed.categories;
+                    if (parsed.products && parsed.products.length) allProducts = parsed.products;
+                    if (parsed.settings) storeSettings = { ...storeSettings, ...parsed.settings };
+                    window.checkCafeStatus();
+                    window.renderMenu();
+                    window.renderShop();
+                }
+            } catch (e) { console.warn(e); }
+        }
+        window.addEventListener('storage', (e) => {
+            if (e.key === "okka_store_data_v1") loadSyncedLocalData();
+        });
+
+        function subscribeToStoreData() {
+            loadSyncedLocalData();
+            if (!db) return;
+
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'categories'), (snap) => {
+                if (!snap.empty) {
+                    allCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } else {
+                    allCategories = [...defaultCategories];
+                }
+                window.renderMenu();
+                window.renderShop();
+            }, (err) => console.error(err));
+
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
+                if (!snap.empty) {
+                    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } else {
+                    allProducts = [...defaultItems];
+                }
+                window.renderMenu();
+                window.renderShop();
+            }, (err) => console.error(err));
+
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'settings'), (snap) => {
+                snap.forEach(docSnap => {
+                    if (docSnap.id === 'general') {
+                        storeSettings = { ...storeSettings, ...docSnap.data() };
+                        window.checkCafeStatus();
+                    }
+                });
+            }, (err) => console.error(err));
+        }
+
+        window.showToast = function(text) {
+            const toast = document.getElementById('toast-msg');
+            toast.textContent = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        };
+
+        window.checkCafeStatus = function() {
+            const indicator = document.getElementById('cafe-status-indicator');
+            const statusText = document.getElementById('cafe-status-text');
+            let isOpen = false;
+
+            if (storeSettings.forceStatus === 'open') {
+                isOpen = true;
+            } else if (storeSettings.forceStatus === 'closed') {
+                isOpen = false;
+            } else {
+                const now = new Date();
+                const day = now.getDay();
+                const hour = now.getHours();
+                if (day === 5) {
+                    isOpen = (hour >= 13 && hour < 24);
+                } else if (day === 6) {
+                    isOpen = (hour === 0) || (hour >= 7 && hour < 24);
+                } else {
+                    isOpen = (hour >= 7 && hour < 24);
+                }
+            }
+
+            if (isOpen) {
+                indicator.className = 'status-pulse status-open';
+                statusText.textContent = currentLang === 'ar' ? 'مفتوح الآن' : 'Open Now';
+                statusText.style.color = '#1e8449';
+            } else {
+                indicator.className = 'status-pulse status-closed';
+                statusText.textContent = currentLang === 'ar' ? 'مغلق الآن' : 'Closed Now';
+                statusText.style.color = '#c0392b';
+            }
+        };
+        setInterval(window.checkCafeStatus, 1000);
+        window.checkCafeStatus();
+
+        window.switchView = function(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+
+            document.querySelectorAll('.main-nav ul li button').forEach(el => el.classList.remove('active'));
+            if (viewName === 'home') document.getElementById('nav-home').classList.add('active');
+            if (viewName === 'menu') {
+                document.getElementById('nav-menu').classList.add('active');
+                window.renderMenu();
+            }
+            if (viewName === 'shop') {
+                document.getElementById('nav-shop').classList.add('active');
+                window.renderShop();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.selectMenuCategory = function(catId) {
+            selectedMenuCat = catId;
+            window.renderMenu();
+        };
+
+        window.selectShopCategory = function(catId) {
+            selectedShopCat = catId;
+            window.renderShop();
+        };
+
+        function getCategoryName(catId) {
+            const cat = allCategories.find(c => c.id === catId);
+            if (!cat) return '';
+            return currentLang === 'ar' ? cat.nameAr : (cat.nameEn || cat.nameAr);
+        }
+
+        window.renderMenu = function() {
+            const grid = document.getElementById('menu-grid');
+            const catBar = document.getElementById('menu-categories-bar');
+            const searchInput = document.getElementById('menu-search-input');
+            const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+            const currency = currentLang === 'ar' ? 'ج.م' : 'EGP';
+            const btnTxt = currentLang === 'ar' ? 'إضافة للسلة' : 'Add to Cart';
+            const allTxt = currentLang === 'ar' ? 'الكل' : 'All';
+
+            const menuCats = allCategories.filter(c => c.section === 'menu');
+            catBar.innerHTML = `
+                <button class="cat-pill ${selectedMenuCat === 'all' ? 'active' : ''}" onclick="selectMenuCategory('all')">${allTxt}</button>
+                ${menuCats.map(c => `
+                    <button class="cat-pill ${selectedMenuCat === c.id ? 'active' : ''}" onclick="selectMenuCategory('${c.id}')">
+                        ${currentLang === 'ar' ? c.nameAr : (c.nameEn || c.nameAr)}
+                    </button>
+                `).join('')}
+            `;
+
+            const filteredItems = allProducts.filter(item => {
+                if (item.section !== 'menu' || item.available === false) return false;
+                const matchCat = selectedMenuCat === 'all' || item.categoryId === selectedMenuCat;
+                const matchSearch = (item.nameAr || '').toLowerCase().includes(query) || (item.nameEn || '').toLowerCase().includes(query);
+                return matchCat && matchSearch;
+            });
+
+            if (filteredItems.length === 0) {
+                const noResText = currentLang === 'ar' ? 'لا يوجد مشروب مطابق حالياً' : 'No drinks found';
+                grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; opacity: 0.7; font-size: 18px; padding: 30px 0;">${noResText}</p>`;
+                return;
+            }
+
+            grid.innerHTML = filteredItems.map(item => {
+                const displayName = currentLang === 'ar' ? item.nameAr : (item.nameEn || item.nameAr);
+                const catLabel = getCategoryName(item.categoryId);
+                return `
+                    <div class="product-card">
+                        <img src="${item.img}" class="product-img" alt="${displayName}" onerror="this.src='https://placehold.co/500x350/FFF3E0/3E2723?text=okka+Coffee'">
+                        <div class="product-body">
+                            ${catLabel ? `<span class="product-cat-badge">${catLabel}</span>` : ''}
+                            <h3 class="product-title">${displayName}</h3>
+                            <div class="product-price">${item.price} ${currency}</div>
+                            <button class="add-to-cart-btn" onclick="addToCart('${item.id}')">${btnTxt}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.renderShop = function() {
+            const grid = document.getElementById('shop-grid');
+            const catBar = document.getElementById('shop-categories-bar');
+            const currency = currentLang === 'ar' ? 'ج.م' : 'EGP';
+            const btnTxt = currentLang === 'ar' ? 'إضافة للسلة' : 'Add to Cart';
+            const allTxt = currentLang === 'ar' ? 'الكل' : 'All';
+
+            const shopCats = allCategories.filter(c => c.section === 'shop');
+            catBar.innerHTML = `
+                <button class="cat-pill ${selectedShopCat === 'all' ? 'active' : ''}" onclick="selectShopCategory('all')">${allTxt}</button>
+                ${shopCats.map(c => `
+                    <button class="cat-pill ${selectedShopCat === c.id ? 'active' : ''}" onclick="selectShopCategory('${c.id}')">
+                        ${currentLang === 'ar' ? c.nameAr : (c.nameEn || c.nameAr)}
+                    </button>
+                `).join('')}
+            `;
+
+            const filteredItems = allProducts.filter(item => {
+                if (item.section !== 'shop' || item.available === false) return false;
+                return selectedShopCat === 'all' || item.categoryId === selectedShopCat;
+            });
+
+            if (filteredItems.length === 0) {
+                const noResText = currentLang === 'ar' ? 'لا توجد منتجات في هذا القسم حالياً' : 'No products available';
+                grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; opacity: 0.7; font-size: 18px; padding: 30px 0;">${noResText}</p>`;
+                return;
+            }
+
+            grid.innerHTML = filteredItems.map(item => {
+                const displayName = currentLang === 'ar' ? item.nameAr : (item.nameEn || item.nameAr);
+                const catLabel = getCategoryName(item.categoryId);
+                return `
+                    <div class="product-card">
+                        <img src="${item.img}" class="product-img" alt="${displayName}" onerror="this.src='https://placehold.co/500x350/FFF3E0/3E2723?text=okka+Beans'">
+                        <div class="product-body">
+                            ${catLabel ? `<span class="product-cat-badge">${catLabel}</span>` : ''}
+                            <h3 class="product-title">${displayName}</h3>
+                            <div class="product-price">${item.price} ${currency}</div>
+                            <button class="add-to-cart-btn" onclick="addToCart('${item.id}')">${btnTxt}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.addToCart = function(itemId) {
+            const product = allProducts.find(p => p.id === itemId);
+            if (!product) return;
+
+            const existing = cart.find(i => i.id === itemId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            window.updateCartUI();
+            if (!document.getElementById('cart-modal').classList.contains('open')) {
+                window.toggleCart();
+            }
+        };
+
+        window.removeItem = function(index) {
+            cart.splice(index, 1);
+            window.updateCartUI();
+        };
+
+        window.updateCartUI = function() {
+            const countEl = document.getElementById('cart-count');
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total');
+            const currency = currentLang === 'ar' ? 'ج.م' : 'EGP';
+
+            const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+            countEl.textContent = totalCount;
+
+            if (cart.length === 0) {
+                const emptyMsg = currentLang === 'ar' ? 'السلة فارغة حالياً' : 'Your cart is currently empty';
+                container.innerHTML = `<p style="text-align:center; opacity:0.6; margin-top:20px;">${emptyMsg}</p>`;
+                totalEl.textContent = `0 ${currency}`;
+                return;
+            }
+
+            let totalPrice = 0;
+            container.innerHTML = cart.map((item, index) => {
+                totalPrice += item.price * item.qty;
+                const displayName = currentLang === 'ar' ? item.nameAr : (item.nameEn || item.nameAr);
+                return `
+                    <div class="cart-item-row">
+                        <div>
+                            <strong>${displayName}</strong><br>
+                            <small>${item.price} ${currency} × ${item.qty}</small>
+                        </div>
+                        <button onclick="removeItem(${index})" style="background:none; border:none; color:#e74c3c; font-size:16px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.textContent = `${totalPrice} ${currency}`;
+        };
+
+        window.toggleCart = function() {
+            document.getElementById('cart-modal').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        };
+
+        window.checkoutWhatsApp = function() {
+            if (cart.length === 0) {
+                window.showToast(currentLang === 'ar' ? 'السلة فارغة! أضف بعض المنتجات أولاً.' : 'Your cart is empty! Please add items first.');
+                return;
+            }
+            const phoneNumber = storeSettings.whatsapp || "201553748198";
+            let message = "مرحباً okka Coffee، أود طلب الآتي:\n\n";
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                message += `• ${item.nameAr} (${item.qty} × ${item.price} ج.م) = ${itemTotal} ج.م\n`;
+            });
+
+            message += `\n*الإجمالي: ${total} ج.م*`;
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        };
+
+        window.toggleTheme = function() {
+            const body = document.body;
+            const themeBtnIcon = document.querySelector('#theme-toggle i');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeBtnIcon.className = 'fa-solid fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeBtnIcon.className = 'fa-solid fa-moon';
+            }
+        };
+
+        window.toggleLanguage = function() {
+            const html = document.documentElement;
+            const langBtn = document.getElementById('lang-toggle');
+
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                html.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+                langBtn.textContent = 'AR';
+
+                document.getElementById('nav-home-txt').textContent = 'Home';
+                document.getElementById('nav-menu-txt').textContent = 'Menu';
+                document.getElementById('nav-shop-txt').textContent = 'Buy Coffee';
+                document.getElementById('hero-badge').innerHTML = '<i class="fa-solid fa-mug-hot"></i> Welcome to your favorite specialty coffee spot';
+                document.getElementById('hero-title').textContent = 'Enjoy the best moments & finest drinks at okka';
+                document.getElementById('hero-desc').textContent = 'We serve delicious handcrafted drinks and daily fresh bakery with the finest specially roasted coffee beans.';
+                document.getElementById('btn-menu-text').textContent = 'Browse Menu';
+                document.getElementById('lbl-fb').textContent = 'Facebook';
+                document.getElementById('lbl-wa').textContent = 'WhatsApp';
+                document.getElementById('lbl-map').textContent = 'Location';
+                document.getElementById('status-title-lbl').textContent = 'Cafe Status';
+                document.getElementById('feat-1').textContent = 'Fresh Roasting';
+                document.getElementById('feat-2').textContent = 'Fast Delivery';
+                document.getElementById('feat-3').textContent = 'Selected Beans';
+                document.getElementById('menu-sec-title').textContent = 'Menu';
+                document.getElementById('menu-search-input').placeholder = 'Search by drink name...';
+                document.getElementById('shop-sec-title').textContent = 'Buy Coffee';
+                document.getElementById('ft-about-title').textContent = 'About okka Coffee';
+                document.getElementById('ft-about-desc').textContent = 'Your premier destination for specialty coffee, carefully roasted to suit your refined taste.';
+                document.getElementById('ft-hours-title').textContent = 'Working Hours';
+                document.getElementById('ft-hours-1').textContent = 'Sat - Thu: 7:00 AM - 12:00 AM';
+                document.getElementById('ft-hours-2').textContent = 'Friday: 1:00 PM - 1:00 AM';
+                document.getElementById('ft-contact-title').textContent = 'Contact Info';
+                document.getElementById('ft-address').textContent = 'Main Coffee Street, City';
+                document.getElementById('cart-modal-title').textContent = 'Shopping Cart';
+                document.getElementById('cart-total-lbl').textContent = 'Total:';
+                document.getElementById('checkout-btn-lbl').textContent = 'Order via WhatsApp';
+                document.getElementById('developer-credit').innerHTML = '<span>Designed by Al-Basha Company</span><span>|</span><a href="tel:01025411955" dir="ltr"><i class="fa-solid fa-phone"></i> 01025411955</a>';
+            } else {
+                currentLang = 'ar';
+                html.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                langBtn.textContent = 'EN';
+
+                document.getElementById('nav-home-txt').textContent = 'الرئيسية';
+                document.getElementById('nav-menu-txt').textContent = 'المنيو';
+                document.getElementById('nav-shop-txt').textContent = 'اشتري القهوة';
+                document.getElementById('hero-badge').innerHTML = '<i class="fa-solid fa-mug-hot"></i> مرحباً بك في وجهتك المفضلة للقهوة المختصة';
+                document.getElementById('hero-title').textContent = 'استمتع بأجمل الأوقات وألذ المشروبات في okka';
+                document.getElementById('hero-desc').textContent = 'نقدم لك أشهى المشروبات المصنوعة بكل حب والمخبوزات الطازجة يومياً مع أجود حبوب القهوة المحمصة خصيصاً لك.';
+                document.getElementById('btn-menu-text').textContent = 'تصفح المنيو';
+                document.getElementById('lbl-fb').textContent = 'فيسبوك';
+                document.getElementById('lbl-wa').textContent = 'واتساب';
+                document.getElementById('lbl-map').textContent = 'الموقع';
+                document.getElementById('status-title-lbl').textContent = 'حالة الكافيه';
+                document.getElementById('feat-1').textContent = 'تحميص طازج';
+                document.getElementById('feat-2').textContent = 'توصيل سريع';
+                document.getElementById('feat-3').textContent = 'حبوب مختارة';
+                document.getElementById('menu-sec-title').textContent = 'المنيو';
+                document.getElementById('menu-search-input').placeholder = 'ابحث باسم المشروب...';
+                document.getElementById('shop-sec-title').textContent = 'اشتري القهوة';
+                document.getElementById('ft-about-title').textContent = 'عن okka Coffee';
+                document.getElementById('ft-about-desc').textContent = 'وجهتك الأولى للاستمتاع بأجود أنواع القهوة المختصة والمحمصة بعناية فائقة لتناسب ذوقك الرفيع.';
+                document.getElementById('ft-hours-title').textContent = 'مواعيد العمل';
+                document.getElementById('ft-hours-1').textContent = 'السبت - الخميس: 7:00 ص - 12:00 ص';
+                document.getElementById('ft-hours-2').textContent = 'الجمعة: 1:00 م - 1:00 ص';
+                document.getElementById('ft-contact-title').textContent = 'بيانات الاتصال';
+                document.getElementById('ft-address').textContent = 'شارع القهوة الرئيسية، المدينة';
+                document.getElementById('cart-modal-title').textContent = 'سلة المشتريات';
+                document.getElementById('cart-total-lbl').textContent = 'الإجمالي:';
+                document.getElementById('checkout-btn-lbl').textContent = 'إرسال الطلب عبر الواتساب';
+                document.getElementById('developer-credit').innerHTML = '<span>تصميم شركة الباشا</span><span>|</span><a href="tel:01025411955" dir="ltr"><i class="fa-solid fa-phone"></i> 01025411955</a>';
+            }
+
+            window.checkCafeStatus();
+            window.renderMenu();
+            window.renderShop();
+            window.updateCartUI();
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSyncedLocalData();
+            window.renderMenu();
+            window.renderShop();
+            window.checkCafeStatus();
+        });
+    </script>
+</body>
+</html>
